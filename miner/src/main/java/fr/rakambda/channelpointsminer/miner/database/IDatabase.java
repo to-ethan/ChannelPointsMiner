@@ -37,5 +37,5 @@ public interface IDatabase extends AutoCloseable{
 	void deleteUserPredictionsForChannel(@NotNull String channelId) throws SQLException;
 	
 	@NotNull
-	Collection<OutcomeStatistic> getOutcomeStatisticsForChannel(@NotNull String channelId, int minBetsPlacedByUser) throws SQLException;
+	Collection<OutcomeStatistic> getOutcomeStatisticsForChannel(@NotNull String channelId, int minBetsPlacedByUser, double minAverageReturnOnInvestment) throws SQLException;
 }

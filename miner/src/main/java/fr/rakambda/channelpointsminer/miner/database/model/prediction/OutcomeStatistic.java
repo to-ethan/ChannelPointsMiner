@@ -15,5 +15,6 @@ public class OutcomeStatistic{
 	private final double averageUserBetsPlaced;
 	private final double averageUserWins;
 	private final double averageReturnOnInvestment;
+	private final double weightedAverageReturnOnInvestment;
 }
 

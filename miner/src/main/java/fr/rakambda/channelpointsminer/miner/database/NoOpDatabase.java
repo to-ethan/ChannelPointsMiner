@@ -55,7 +55,7 @@ public class NoOpDatabase implements IDatabase{
 	
 	@Override
 	@NotNull
-	public Collection<OutcomeStatistic> getOutcomeStatisticsForChannel(@NotNull String channelId, int minBetsPlacedByUser){
+	public Collection<OutcomeStatistic> getOutcomeStatisticsForChannel(@NotNull String channelId, int minBetsPlacedByUser, double minAverageReturnOnInvestment){
 		return List.of();
 	}
 	

@@ -485,14 +485,7 @@ class SQLiteDatabaseTest{
 								.averageUserBetsPlaced(1D)
 								.averageUserWins(1D)
 								.averageReturnOnInvestment(0.5)
-								.build(),
-						OutcomeStatistic.builder()
-								.badge("B4")
-								.userCnt(1)
-								.averageWinRate(0D)
-								.averageUserBetsPlaced(1D)
-								.averageUserWins(0D)
-								.averageReturnOnInvestment(-1D)
+								.weightedAverageReturnOnInvestment(0.5)
 								.build()
 				);
 	}

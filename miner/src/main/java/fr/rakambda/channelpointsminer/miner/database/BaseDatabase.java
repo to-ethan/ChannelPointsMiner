@@ -242,7 +242,7 @@ public abstract class BaseDatabase implements IDatabase{
 	
 	@Override
 	@NotNull
-	public Collection<OutcomeStatistic> getOutcomeStatisticsForChannel(@NotNull String channelId, int minBetsPlacedByUser) throws SQLException{
+	public Collection<OutcomeStatistic> getOutcomeStatisticsForChannel(@NotNull String channelId, int minBetsPlacedByUser, double minAverageReturnOnInvestment) throws SQLException{
 		log.debug("Getting most trusted prediction from already placed bets.");
 		try(var conn = getConnection();
 				var statement = conn.prepareStatement("""
@@ -251,16 +251,19 @@ public abstract class BaseDatabase implements IDatabase{
 							AVG(`WinRate`) AS AvgWinRate,
 							AVG(`PredictionCnt`) AS AvgUserBetsPlaced,
 							AVG(`WinCnt`) AS AvgUserWins,
-							AVG(`ReturnOnInvestment`) AS AvgReturnOnInvestment
+							AVG(`ReturnOnInvestment`)/AVG(`PredictionCnt`) AS AvgReturnOnInvestment,
+							AVG(SQRT(`PredictionCnt`))*AVG(`ReturnOnInvestment`)/AVG(`PredictionCnt`) AS WeightedAvgReturnOnInvestment
 						FROM `UserPrediction` AS up
 						INNER JOIN `PredictionUser` AS pu
 						ON up.`UserID`=pu.`ID` AND up.`ChannelID` = pu.`ChannelID`
 						WHERE up.`ChannelID`=?
 						AND `PredictionCnt`>=?
+						AND `ReturnOnInvestment`>?
 						GROUP BY `Badge`"""
 				)){
 			statement.setString(1, channelId);
 			statement.setInt(2, minBetsPlacedByUser);
+			statement.setDouble(3, minAverageReturnOnInvestment);
 			
 			var outcomeStatistics = new LinkedList<OutcomeStatistic>();
 			try(var result = statement.executeQuery()){

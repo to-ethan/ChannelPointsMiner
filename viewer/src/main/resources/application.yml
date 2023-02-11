@@ -1,8 +1,12 @@
 spring:
+  datasource:
+    url: jdbc:sqlite:miner.db
+    driver-class-name: org.sqlite.JDBC
   jpa:
-    generate-ddl: false
+    database-platform: org.hibernate.dialect.MySQLDialect
+    generate-ddl: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl

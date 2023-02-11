@@ -1,0 +1,68 @@
+{
+  "accounts" : [
+    {
+      "username" : "r2f_lol",
+      "loginMethod" : {
+        "type" : "tv",
+        "authenticationFolder" : "authentication/tv"
+      },
+      "loadFollows" : true,
+      "enabled" : true,
+      "defaultStreamerSettings" : {
+        "makePredictions" : true,
+        "followRaid" : true,
+        "participateCampaigns" : true,
+        "claimMoments" : true,
+        "joinChat" :  true,
+        "predictions" : {
+          "delayCalculator" : {
+            "type" : "fromEnd",
+            "seconds" : 10
+          },
+          "minimumPointsRequired" : 50,
+          "outcomePicker" : {
+            "type" : "smart",
+            "percentageGap" : 0.2
+          },
+          "amountCalculator" : {
+            "type" : "percentage",
+            "percentage" : 0.2,
+            "max" : 50000
+          },
+          "actions" : [
+            {
+              "type": "stealth"
+            }
+          ]
+        }
+      },
+      "discord" : {
+        "webhookUrl" : "https://discord.com/api/webhooks/1073100674633584764/DtSQBgXEEGfv72YUDkSvTP6XxZquZgG0QUgvatGR6bwyLqyOsTHThEulPnHIiOGoxTx5",
+        "embeds" : false,
+        "events" : {
+          "DropClaimedEvent" : {
+            "format" : "{emoji} : Drop claimed [{drop_name}]"
+          },
+          "EventCreatedEvent" : {
+            "format" : "{emoji} {streamer} : Prediction created \"{prediction_name}\""
+          },
+          "PredictionMadeEvent" : {
+            "format" : "{emoji} {streamer} : Bet {prediction_points} channel points on \"{prediction_outcome}\""
+          },
+          "PredictionResultEvent" : {
+            "format" : "{emoji} {streamer} : {prediction_type} {prediction_points} channel points!"
+          }
+        }
+      },
+      "reloadEvery" : 15,
+      "analytics" : {
+        "enabled" : true,
+        "recordChatsPredictions" : true,
+        "database" : {
+          "jdbcUrl" : "jdbc:sqlite:miner.db"
+        }
+      },
+      "chatMode" : "WS"
+    }
+  ]
+}

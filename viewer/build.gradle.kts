@@ -13,6 +13,12 @@ configurations {
 }
 
 dependencies {
+    implementation(libs.hikaricp)
+    implementation(libs.mariadb)
+    implementation(libs.sqlite)
+    implementation(libs.mysql)
+    implementation(libs.bundles.flyway)
+
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")

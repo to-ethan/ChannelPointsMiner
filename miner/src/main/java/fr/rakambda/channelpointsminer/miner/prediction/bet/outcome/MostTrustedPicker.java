@@ -43,6 +43,10 @@ public class MostTrustedPicker implements IOutcomePicker{
 	@JsonPropertyDescription("Need at least x bets placed the chosen outcome. Default: 5")
 	@Builder.Default
 	private int minTotalBetsPlacedOnOutcome = 5;
+    @JsonProperty("minAverageReturnOnInvestment")
+    @JsonPropertyDescription("Need at least x% average return on investment to bet on this prediction. Default: 0.05")
+    @Builder.Default
+    private double minAverageReturnOnInvestment = 0.05;
 	
 	@Override
 	@NotNull
@@ -56,10 +60,10 @@ public class MostTrustedPicker implements IOutcomePicker{
 			var outcomes = bettingPrediction.getEvent().getOutcomes();
 			var title = bettingPrediction.getEvent().getTitle();
 			
-			var outcomeStatistics = database.getOutcomeStatisticsForChannel(bettingPrediction.getEvent().getChannelId(), minTotalBetsPlacedByUser);
+			var outcomeStatistics = database.getOutcomeStatisticsForChannel(bettingPrediction.getEvent().getChannelId(), minTotalBetsPlacedByUser, minAverageReturnOnInvestment);
 			
 			var mostTrusted = outcomeStatistics.stream()
-					.max(Comparator.comparingDouble(OutcomeStatistic::getAverageReturnOnInvestment))
+					.max(Comparator.comparingDouble(OutcomeStatistic::getWeightedAverageReturnOnInvestment))
 					.orElseThrow(() -> new BetPlacementException("No outcome statistics found. Maybe not enough data gathered yet."));
 			
 			for(var outcomeStats : outcomeStatistics){

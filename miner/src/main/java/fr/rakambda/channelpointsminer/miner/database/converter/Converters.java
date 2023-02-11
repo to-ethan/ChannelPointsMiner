@@ -25,6 +25,7 @@ public class Converters{
 				.averageUserBetsPlaced(rs.getDouble("AvgUserBetsPlaced"))
 				.averageUserWins(rs.getDouble("AvgUserWins"))
 				.averageReturnOnInvestment(rs.getDouble("AvgReturnOnInvestment"))
+				.weightedAverageReturnOnInvestment(rs.getDouble("WeightedAvgReturnOnInvestment"))
 				.build();
 	}
 }

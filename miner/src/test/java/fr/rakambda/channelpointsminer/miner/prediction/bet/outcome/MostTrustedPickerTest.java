@@ -32,6 +32,7 @@ class MostTrustedPickerTest{
     private final static int MIN_TOTAL_BETS_PLACED_BY_USER = 5;
 	private final static int MIN_TOTAL_BETS_PLACED_ON_PREDICTION = 10;
 	private final static int MIN_TOTAL_BETS_PLACED_ON_OUTCOME = 5;
+    private final static int MIN_AVERAGE_RETURN_ON_INVESTMENT = 0;
 	private final static String BADGE_1 = "blue-1";
 	private final static String BADGE_2 = "pink-2";
 	
@@ -86,7 +87,7 @@ class MostTrustedPickerTest{
         lenient().when(outcomeStatisticBlue.getUserCnt()).thenReturn(10);
         lenient().when(outcomeStatisticPink.getUserCnt()).thenReturn(10);
         
-        lenient().when(database.getOutcomeStatisticsForChannel(CHANNEL_ID, MIN_TOTAL_BETS_PLACED_BY_USER)).thenReturn(List.of(outcomeStatisticBlue, outcomeStatisticPink));
+        lenient().when(database.getOutcomeStatisticsForChannel(CHANNEL_ID, MIN_TOTAL_BETS_PLACED_BY_USER, MIN_AVERAGE_RETURN_ON_INVESTMENT)).thenReturn(List.of(outcomeStatisticBlue, outcomeStatisticPink));
     }
     
     @Test
@@ -121,7 +122,7 @@ class MostTrustedPickerTest{
     @Test
     void databaseThrowsException() throws SQLException{
         try(var databaseFactory = mockStatic(DatabaseFactory.class)){
-            when(database.getOutcomeStatisticsForChannel(CHANNEL_ID, MIN_TOTAL_BETS_PLACED_BY_USER)).thenThrow(new SQLException(""));
+            when(database.getOutcomeStatisticsForChannel(CHANNEL_ID, MIN_TOTAL_BETS_PLACED_BY_USER, MIN_AVERAGE_RETURN_ON_INVESTMENT)).thenThrow(new SQLException(""));
 	
 	        assertThrows(BetPlacementException.class, () -> tested.chooseOutcome(bettingPrediction, database));
         }
@@ -130,7 +131,7 @@ class MostTrustedPickerTest{
     @Test
     void emptyStatistics() throws SQLException{
         try(var databaseFactory = mockStatic(DatabaseFactory.class)){
-            when(database.getOutcomeStatisticsForChannel(CHANNEL_ID, MIN_TOTAL_BETS_PLACED_BY_USER)).thenReturn(Collections.emptyList());
+            when(database.getOutcomeStatisticsForChannel(CHANNEL_ID, MIN_TOTAL_BETS_PLACED_BY_USER, MIN_AVERAGE_RETURN_ON_INVESTMENT)).thenReturn(Collections.emptyList());
 	
 	        assertThrows(BetPlacementException.class, () -> tested.chooseOutcome(bettingPrediction, database));
         }
