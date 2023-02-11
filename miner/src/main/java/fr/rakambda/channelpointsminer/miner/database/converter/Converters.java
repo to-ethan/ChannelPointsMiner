@@ -1,5 +1,6 @@
 package fr.rakambda.channelpointsminer.miner.database.converter;
 
+import fr.rakambda.channelpointsminer.miner.database.model.prediction.MostTrustedUser;
 import fr.rakambda.channelpointsminer.miner.database.model.prediction.OutcomeStatistic;
 import fr.rakambda.channelpointsminer.miner.database.model.prediction.UserPrediction;
 import org.jetbrains.annotations.NotNull;
@@ -28,4 +29,16 @@ public class Converters{
 				.weightedAverageReturnOnInvestment(rs.getDouble("WeightedAvgReturnOnInvestment"))
 				.build();
 	}
+    
+    @NotNull
+    public static MostTrustedUser convertMostTrustedUser(@NotNull ResultSet rs) throws SQLException{
+        return MostTrustedUser.builder()
+                .badge(rs.getString("Badge"))
+                .winRate(rs.getDouble("WinRate"))
+                .userBetsPlaced(rs.getInt("PredictionCnt"))
+                .averageReturnOnInvestment(rs.getDouble("AverageReturnOnInvestment"))
+                .standardDeviation(rs.getDouble("StandardDeviation"))
+                .systemQualityNumber(rs.getDouble("SystemQualityNumber"))
+                .build();
+    }
 }

@@ -3,6 +3,7 @@ package fr.rakambda.channelpointsminer.miner.database;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import fr.rakambda.channelpointsminer.miner.api.ws.data.message.subtype.Event;
+import fr.rakambda.channelpointsminer.miner.database.model.prediction.MostTrustedUser;
 import fr.rakambda.channelpointsminer.miner.database.model.prediction.OutcomeStatistic;
 import fr.rakambda.channelpointsminer.miner.factory.TimeFactory;
 import org.assertj.core.api.Assertions;
@@ -476,7 +477,7 @@ class SQLiteDatabaseTest{
 		tested.addUserPrediction("user-2", CHANNEL_ID, "B4");
 		tested.addUserPrediction("user-3", CHANNEL_ID, "B5");
 		
-		Assertions.assertThat(tested.getOutcomeStatisticsForChannel(CHANNEL_ID, 1))
+		Assertions.assertThat(tested.getOutcomeStatisticsForChannel(CHANNEL_ID, 1, 0))
 				.containsExactlyInAnyOrder(
 						OutcomeStatistic.builder()
 								.badge("B3")
@@ -489,6 +490,38 @@ class SQLiteDatabaseTest{
 								.build()
 				);
 	}
+    @Test
+    void getHighestPredictionUserForChannel() throws SQLException{
+        tested.addUserPrediction(USER_USERNAME, CHANNEL_ID, "B1");
+        tested.addUserPrediction("user-2", CHANNEL_ID, "B2");
+        
+        tested.resolvePrediction(event, "Outcome1", "B1", 1.5D);
+        
+        tested.addUserPrediction(USER_USERNAME, CHANNEL_ID, "B3");
+        tested.addUserPrediction("user-2", CHANNEL_ID, "B4");
+        tested.addUserPrediction("user-3", CHANNEL_ID, "B5");
+        
+        Assertions.assertThat(tested.getHighestPredictionUsersForChannel(CHANNEL_ID, 1, 0))
+                .containsExactlyInAnyOrder(
+                        MostTrustedUser.builder()
+                                .badge("B3")
+                                .winRate(1D)
+                                .userBetsPlaced(1)
+                                .averageReturnOnInvestment(0.5)
+                                .standardDeviation(0.0)
+                                .systemQualityNumber(0.0)
+                                .build(),
+                        MostTrustedUser.builder()
+                                .badge("B4")
+                                .winRate(0D)
+                                .userBetsPlaced(1)
+                                .averageReturnOnInvestment(-1)
+                                .standardDeviation(0.0)
+                                .systemQualityNumber(0.0)
+                                .build()
+                );
+    }
+    
 	
 	@Test
 	void deleteAllUserPredictions() throws SQLException{

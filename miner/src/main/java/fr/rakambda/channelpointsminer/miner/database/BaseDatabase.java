@@ -3,6 +3,7 @@ package fr.rakambda.channelpointsminer.miner.database;
 import com.zaxxer.hikari.HikariDataSource;
 import fr.rakambda.channelpointsminer.miner.api.ws.data.message.subtype.Event;
 import fr.rakambda.channelpointsminer.miner.database.converter.Converters;
+import fr.rakambda.channelpointsminer.miner.database.model.prediction.MostTrustedUser;
 import fr.rakambda.channelpointsminer.miner.database.model.prediction.OutcomeStatistic;
 import fr.rakambda.channelpointsminer.miner.factory.TimeFactory;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @RequiredArgsConstructor
 @Log4j2
-public abstract class BaseDatabase implements IDatabase{
+public abstract class BaseDatabase implements IDatabase {
 	private final HikariDataSource dataSource;
 	private final Lock[] getOrCreatePredictionUserIdLocks = new Lock[]{
 			new ReentrantLock(),
@@ -275,6 +276,37 @@ public abstract class BaseDatabase implements IDatabase{
 			return outcomeStatistics;
 		}
 	}
+    
+    @Override
+    @NotNull
+    public Collection<MostTrustedUser> getHighestPredictionUsersForChannel(@NotNull String channelId, int minBetsPlacedByUser, double minSystemQualityNumber) throws SQLException{
+        log.debug("Getting most trusted prediction from already placed bets.");
+        try(var conn = getConnection();
+                var statement = conn.prepareStatement("""
+						SELECT `Badge`, `UserID`, `WinRate`, `PredictionCnt`, `WinCnt`, `AverageReturnOnInvestment`, `StandardDeviation`, `SystemQualityNumber`
+						FROM `UserPrediction` AS up
+						INNER JOIN `PredictionUser` AS pu
+						ON up.`UserID`=pu.`ID` AND up.`ChannelID` = pu.`ChannelID`
+						WHERE up.`ChannelID`=?
+						AND `PredictionCnt`>=?
+						AND `SystemQualityNumber`>=?
+						ORDER BY `SystemQualityNumber` DESC
+						LIMIT 5"""
+                )){
+            statement.setString(1, channelId);
+            statement.setInt(2, minBetsPlacedByUser);
+            statement.setDouble(3, minSystemQualityNumber);
+            
+            var mostTrustedUsers = new LinkedList<MostTrustedUser>();
+            try(var result = statement.executeQuery()){
+                while(result.next()){
+                    mostTrustedUsers.add(Converters.convertMostTrustedUser(result));
+                }
+            }
+            
+            return mostTrustedUsers;
+        }
+    }
 	
 	@Override
 	public void close(){

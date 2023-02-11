@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-public class SQLiteDatabase extends BaseDatabase{
+public class SQLiteDatabase extends BaseDatabase {
 	public SQLiteDatabase(HikariDataSource dataSource){
 		super(dataSource);
 	}
@@ -77,10 +77,11 @@ public class SQLiteDatabase extends BaseDatabase{
 						SET
 						`StandardDeviation`=SQRT(`SumOfReturnOnInvestmentSquared`/`PredictionCnt`-(`ReturnOnInvestment`/`PredictionCnt`)*(`ReturnOnInvestment`/`PredictionCnt`))
 						WHERE `ID`=? AND `ChannelID`=? AND `PredictionCnt`>1""");
+                // SQN N=100 limit
                 var updateSystemQualityNumberUserStmt = conn.prepareStatement("""
 						UPDATE `PredictionUser`
 						SET
-						`SystemQualityNumber`=SQRT(`PredictionCnt`)*`AverageReturnOnInvestment`/`StandardDeviation`
+						`SystemQualityNumber`=SQRT(MIN(100, `PredictionCnt`))*`AverageReturnOnInvestment`/`StandardDeviation`
 						WHERE `ID`=? AND `ChannelID`=? AND `StandardDeviation`>0""");
 		){
             double returnOnInvestment = returnRatioForWin - 1;

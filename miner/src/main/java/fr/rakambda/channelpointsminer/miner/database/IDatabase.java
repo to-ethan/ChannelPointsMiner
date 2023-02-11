@@ -1,5 +1,6 @@
 package fr.rakambda.channelpointsminer.miner.database;
 
+import fr.rakambda.channelpointsminer.miner.database.model.prediction.MostTrustedUser;
 import fr.rakambda.channelpointsminer.miner.database.model.prediction.OutcomeStatistic;
 import fr.rakambda.channelpointsminer.miner.api.ws.data.message.subtype.Event;
 import org.jetbrains.annotations.NotNull;
@@ -38,4 +39,7 @@ public interface IDatabase extends AutoCloseable{
 	
 	@NotNull
 	Collection<OutcomeStatistic> getOutcomeStatisticsForChannel(@NotNull String channelId, int minBetsPlacedByUser, double minAverageReturnOnInvestment) throws SQLException;
+    
+    @NotNull
+    Collection<MostTrustedUser> getHighestPredictionUsersForChannel(@NotNull String channelId, int minBetsPlacedByUser, double minSystemQualityNumber) throws SQLException;
 }

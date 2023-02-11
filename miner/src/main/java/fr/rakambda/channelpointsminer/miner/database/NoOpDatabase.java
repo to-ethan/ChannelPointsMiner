@@ -1,9 +1,11 @@
 package fr.rakambda.channelpointsminer.miner.database;
 
+import fr.rakambda.channelpointsminer.miner.database.model.prediction.MostTrustedUser;
 import fr.rakambda.channelpointsminer.miner.database.model.prediction.OutcomeStatistic;
 import fr.rakambda.channelpointsminer.miner.api.ws.data.message.subtype.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
@@ -58,8 +60,13 @@ public class NoOpDatabase implements IDatabase{
 	public Collection<OutcomeStatistic> getOutcomeStatisticsForChannel(@NotNull String channelId, int minBetsPlacedByUser, double minAverageReturnOnInvestment){
 		return List.of();
 	}
-	
-	@Override
+    
+    @Override
+    public @NotNull Collection<MostTrustedUser> getHighestPredictionUsersForChannel(@NotNull String channelId, int minBetsPlacedByUser, double minSystemQualityNumber) throws SQLException{
+        return List.of();
+    }
+    
+    @Override
 	public void close(){
 	}
 	
