@@ -47,13 +47,17 @@ CREATE INDEX IF NOT EXISTS `ChannelIDIdx` ON `ResolvedPrediction` (`ChannelID`);
 
 CREATE TABLE IF NOT EXISTS `PredictionUser`
 (
-    `ID`                 INTEGER           NOT NULL PRIMARY KEY AUTOINCREMENT,
-    `Username`           VARCHAR(128)      NOT NULL,
-    `ChannelID`          VARCHAR(32)       NOT NULL REFERENCES `Channel` (`ID`),
-    `PredictionCnt`      SMALLINT UNSIGNED NOT NULL DEFAULT 0,
-    `WinCnt`             SMALLINT UNSIGNED NOT NULL DEFAULT 0,
-    `WinRate`            REAL              NOT NULL DEFAULT 0,
-    `ReturnOnInvestment` REAL              NOT NULL DEFAULT 0,
+    `ID`                             INTEGER           NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `Username`                       VARCHAR(128)      NOT NULL,
+    `ChannelID`                      VARCHAR(32)       NOT NULL REFERENCES `Channel` (`ID`),
+    `PredictionCnt`                  SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    `WinCnt`                         SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    `WinRate`                        REAL              NOT NULL DEFAULT 0,
+    `ReturnOnInvestment`             REAL              NOT NULL DEFAULT 0,
+    `AverageReturnOnInvestment`      REAL              NOT NULL DEFAULT 0,
+    `SumOfReturnOnInvestmentSquared` REAL              NOT NULL DEFAULT 0,
+    `StandardDeviation`              REAL              NOT NULL DEFAULT 0,
+    `SystemQualityNumber`            REAL              NOT NULL DEFAULT 0,
     UNIQUE (`Username`, `ChannelID`)
 );
 

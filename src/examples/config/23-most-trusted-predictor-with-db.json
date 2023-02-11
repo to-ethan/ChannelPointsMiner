@@ -19,21 +19,19 @@
             "type" : "fromEnd",
             "seconds" : 10
           },
-          "minimumPointsRequired" : 50,
+          "minimumPointsRequired" : 100,
           "outcomePicker" : {
-            "type" : "smart",
-            "percentageGap" : 0.2
+            "type" : "mostTrusted",
+            "minTotalBetsPlacedByUser" : 5,
+            "minTotalBetsPlacedOnPrediction" : 1,
+            "minTotalBetsPlacedOnOutcome" : 1,
+            "minAverageReturnOnInvestment": 0.10
           },
           "amountCalculator" : {
             "type" : "percentage",
             "percentage" : 0.2,
             "max" : 50000
-          },
-          "actions" : [
-            {
-              "type": "stealth"
-            }
-          ]
+          }
         }
       },
       "discord" : {
@@ -54,6 +52,12 @@
           }
         }
       },
+      "streamerConfigDirectories" : [
+        {
+          "path" : "streamers",
+          "recursive" : true
+        }
+      ],
       "reloadEvery" : 15,
       "analytics" : {
         "enabled" : true,
@@ -62,7 +66,7 @@
           "jdbcUrl" : "jdbc:sqlite:miner.db"
         }
       },
-      "chatMode" : "WS"
+      "chatMode" : "IRC"
     }
   ]
 }
